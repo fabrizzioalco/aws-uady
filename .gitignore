@@ -83,6 +83,7 @@ ipython_config.py
 
 # pyenv
 .python-version
+uady-env/
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
@@ -106,6 +107,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+.vscode/
 ENV/
 env.bak/
 venv.bak/
