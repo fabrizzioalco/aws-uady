@@ -1,41 +1,39 @@
 from flask import Blueprint, request
-from models import Alumno as alumno
+# from models import Alumno as alumno
 
-alumno = Blueprint('alumno', __name__)
-alumno_data=dict()
+alumno_bp = Blueprint('alumno', __name__)
 
-@alumno.route("/alumno", methods=["POST"])
+alumnos=[]
+@alumno_bp.route("/alumno", methods=["POST"])
 def create_alumno():
-	"""
-	Crea un alumno
-	"""
-
-
+	alumno = request.get_json()
+	# print(alumno)
+	alumnos.append(alumno)
 	return "Crear alumno"
 
 #GET
-@alumno.route("/alumnos", method=["GET"])
+@alumno_bp.route("/alumnos", methods=["GET"])
 def get_alumnos():
 	"""
-	Obtiene todos los alumnos
+	Obtiene todos los alumno
 	"""
-	return "Obtener todos los alumnos"
+	return "Obtener todos los alumno_bps"
 
-@alumno.route("/alumonos/<int:id>", method=["PUT", "GET"])
+@alumno_bp.route("/alumonos/<int:id>", methods=["PUT", "GET"])
 def get_alumno(alumno):
 	"""
 	Obtiene un alumno
 	"""
 
-	if request.method == "PUT":
-		return "Actualizar alumno"
+	if request.methods == "PUT":
+		return "Actualizar alumno_bp"
 
 
-	return "Obtener un alumno"
+	return "Obtener un alumno_bp"
 
-@alumno.route("alumnos/<int:id>", methods=["DELETE"])
+@alumno_bp.route("/alumnos/<int:id>", methods=["DELETE"])
 def delete_alumno(id):
 	"""
-	Elimina un alumno
+	Elimina un alumno_bp
 	"""
-	return "Eliminar un alumno"
+	return "Eliminar un alumno_bp"
