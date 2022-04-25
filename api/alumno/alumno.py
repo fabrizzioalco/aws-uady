@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 # from models import Alumno as alumno
 
 alumno_bp = Blueprint('alumno', __name__)
@@ -17,7 +17,7 @@ def create_alumno():
 #GET
 @alumno_bp.route("/alumnos", methods=["GET"])
 def get_alumnos():
-	return alumnos
+	return jsonify(alumnos)
 
 @alumno_bp.route("/alumno/<int:id>", methods=["PUT", "GET"])
 def get_alumno(id):
@@ -39,5 +39,13 @@ def get_alumno(id):
 def delete_alumno(id):
 	"""
 	Elimina un alumno_bp
+
 	"""
-	return "Eliminar un alumno_bp"
+	alumno_id = request.get_json().get('id')
+
+	for student in alumnos: 
+		if student["id"] == alumno_id:
+			alumnos.remove(student)
+
+
+	return "Alumno eliminado"
