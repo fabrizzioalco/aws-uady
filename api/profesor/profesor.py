@@ -1,57 +1,61 @@
 from flask import Blueprint, request, jsonify
-
+from utils.validation import validate_professor_payload
 profesor_bp = Blueprint('profesor', __name__)
 
 profesores=[]
 
-@profesor_bp.route("/profesor", methods=["POST"])
-def create_profesor():
-	profesor = request.get_json()
+@profesor_bp.route("/profesores", methods=["POST"])
+def create_profesores():
+	profesor_p = request.get_json()
 
-	if profesor["id"] in profesores:
-		return jsonify({"error": "profesor already exists"}), 400
+	if not validate_professor_payload(profesor_p):
+		return jsonify({"error": "BAD REQUEST"}), 400
 
-	profesores.append(profesor)
-	print(profesores)
-	return profesor, 200
+	for profesor in profesores:
+		if profesor_p["id"] == profesor["id"]:
+			return jsonify({"error": "Already Exist"}), 400
+
+	profesores.append(profesor_p)
+	return jsonify(profesor_p), 201
 
 @profesor_bp.route("/profesores", methods=["GET"])
 def get_profesores():
 	return jsonify(profesores), 200
 
-@profesor_bp.route("/profesor/<int:id>", methods=["PUT", "GET"])
+@profesor_bp.route("/profesores/<int:id>", methods=["PUT", "GET"])
 def get_profesor(id):
 	"""
-	Obtiene un profesor
+	Obtiene un profesores
 	"""
-	profesor_id = request.get_json().get('id')
 
 	if request.method == "PUT":
+		profesor_p = request.get_json()
+		if not validate_professor_payload(profesor_p):
+			return jsonify({"error": "BAD REQUEST"}), 400
+
 		for profesor in profesores:
-			if profesor["id"] == profesor_id:
-				profesor["nombre"] = request.get_json().get('nombre')
-				profesor["apellido"] = request.get_json().get('apellido')
+			if profesor["id"] == id:
+				profesor["nombres"] = request.get_json().get('nombres')
+				profesor["apellidos"] = request.get_json().get('apellidos')
 				profesor["numeroEmpleado"] = request.get_json().get('numeroEmpleado')
 				profesor["horasClase"] = request.get_json().get('horasClase')
 				return jsonify(profesor), 200
 
 	for profesor in profesores: 
-		if profesor["id"] == profesor_id:
+		if profesor["id"] == id:
 			return profesor, 200
-		else:
-			return "No existe profesor con id: {}".format(profesor_id), 404
-
-@profesor_bp.route("/profesor/<int:id>", methods=["DELETE"])
-def delete_profesor(id):
+		
+	return  {}, 404
+@profesor_bp.route("/profesores/<int:id>", methods=["DELETE"])
+def delete_profesores(id):
 	"""
-	Elimina un profesor
+	Elimina un profesores
 	"""
-	profesor_id = request.get_json().get('id')
 
 	for profesor in profesores: 
-		if profesor["id"] == profesor_id:
 
+		if profesor["id"] == id:
 			profesores.remove(profesor)
-			return "Profesor eliminado", 200
+			return {},200
 
-	return "No existe profesor con id: {}".format(profesor_id), 404
+	return {}, 404
