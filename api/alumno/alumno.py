@@ -7,7 +7,7 @@ alumnos=[]
 @alumno_bp.route("/alumno", methods=["POST"])
 def create_alumno():
 	alumno = request.get_json()
-	#TODO: Create validation. And create from model
+	
 	if alumno["id"] in alumnos:
 		return jsonify({"error": "alumno already exists"}), 400
 
