@@ -14,10 +14,14 @@ locals {
   }
 }
 
-
 ####### RESOURCES THAT ARE NEED IT TO BE ABLE TO CREATE THE EC2 INSTNACE #######	
 resource "aws_vpc" "PF-WebS-VPC" {
-  cidr_block = "10.0.2.0/24"
+  cidr_block       = "10.0.2.0/24"
+  instance_tenancy = "default"
+
+  tags = {
+    Name = "PF-WebS-VPC"
+  }
 }
 
 resource "aws_subnet" "PF-PubSubnet1" {
