@@ -17,22 +17,26 @@ locals {
 
 ####### RESOURCES THAT ARE NEED IT TO BE ABLE TO CREATE THE EC2 INSTNACE #######	
 resource "aws_vpc" "PF-WebS-VPC" {
-  cidr_block = "10.0.0.0/24"
+  cidr_block = "10.0.2.0/24"
 }
 
 resource "aws_subnet" "PF-PubSubnet1" {
   vpc_id            = aws_vpc.PF-WebS-VPC.id
-  cidr_block        = "10.2.0.0/24"
+  cidr_block        = "10.0.2.0/24"
   availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "PF-PubSubnet1"
+  }
 }
 
 
 resource "aws_network_interface" "PF-WebS-ENI" {
-  subnet_id   = aws_subnet.PF-PubSubnet1.id
-  private_ips = ["10.0.1.29/24"]
+  subnet_id = aws_subnet.PF-PubSubnet1.id
+  #   private_ips = ["10.0.2.4/24"]
 
   tags = {
-    Name = "PD-WebS-ENI"
+    Name = "PF-WebS-ENI"
   }
 }
 
@@ -61,11 +65,14 @@ resource "aws_security_group" "allow_all" {
 ## 	EC2 INSTANCE ##
 resource "aws_instance" "PF-WebS" {
   instance_type = "t2.micro"
-  key_name      = "PF-WebS"
+  key_name      = "vockey"
   ami           = "ami-0ff8a91507f77f867"
 
   network_interface {
     network_interface_id = aws_network_interface.PF-WebS-ENI.id
     device_index         = 0
+  }
+  tags = {
+    Name = "PF-WebS"
   }
 }
