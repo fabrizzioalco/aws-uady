@@ -6,8 +6,6 @@ def validate_student_payload(payload):
 		return False
 	if type(payload) is not dict:
 		return False
-	if 'id' not in payload :
-		return False
 	if 'nombres' not in payload :
 		return False
 	if 'apellidos' not in payload :
@@ -15,8 +13,6 @@ def validate_student_payload(payload):
 	if 'matricula' not in payload :
 		return False
 	if 'promedio' not in payload :
-		return False
-	if type(payload['id']) is not int:
 		return False
 	if type(payload["nombres"]) is not str:
 		return False

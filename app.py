@@ -3,17 +3,23 @@ from api.profesor.profesor import profesor_bp
 from flask import Flask
 from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+import os 
+import psycopg2
+from config import *
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-# engine=db.create_engine('mysql+pymysql://root:root@localhost/universidad')
-# engine.connect()
 
+# app = Flask(__name__)
 
-app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI') or 'sqlite:///sicei-webS.db'
+# app.config['UPLOAD_FOLDER'] = './upload'
 
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db=SQLAlchemy(app)
+# db = SQLAlchemy(app)
+from models import *
 #Register blueprints
 app.register_blueprint(alumno_bp)
 app.register_blueprint(profesor_bp)
+

@@ -1,15 +1,11 @@
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from flask import Flask
 import os 
 
-basedir=os.path.abspath(os.path.dirname(__file__))
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI') or 'sqlite:///sicei-webS.db'
+app.config['UPLOAD_FOLDER'] = './upload'
 
-class Config(object):
-	DEBUG = False 
-	TESTING = False
-	CSRF_ENABLED=True 
-	SECRET_KEY = 'this-really-needs-to-be-changed'
-	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-
-
-
-
+db = SQLAlchemy(app)

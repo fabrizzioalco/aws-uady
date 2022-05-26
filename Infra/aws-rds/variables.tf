@@ -15,3 +15,9 @@ variable "profile" {
   type        = string
 }
 
+variable "security_group_ids" {
+  default     = ["sg-01c5908666c3e76c2"]
+  description = "Security group IDs"
+  type        = list(string)
+}
+
