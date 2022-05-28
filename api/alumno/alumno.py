@@ -1,10 +1,13 @@
 # from re import A
+from botocore.config import Config
 from curses import reset_prog_mode
 from flask import Blueprint, request, jsonify, abort
 from psycopg2 import Date
 from utils.validation import validate_student_payload
 from utils.s3 import push_to_s3
 import boto3
+import botocore 
+from botocore.exceptions import ClientError
 # from app import *
 from config import *
 from werkzeug.utils import secure_filename
@@ -20,14 +23,35 @@ def save_profile_picture(id):
 	print("This is the student", student)
 	if 'foto' in request.files: 
 		foto = request.files['foto']
+		print(foto)
+		print(os.getcwd())
 		filename = secure_filename(foto.filename)
-		foto.save(os.path.join(app.root_path, './upload', filename))
-		s3_url = push_to_s3(filename, bucket_name , student.nombres)
- 
-		setattr(student, s3_url)
+		print(filename)
+		foto.save(os.path.join('./upload', filename))
+	#	s3_url = push_to_s3(filename, bucket_name , student.nombres)
+		s3_client = boto3.client('s3', aws_access_key_id='ASIASDXOW6JFGEXP75EF',
+    					aws_secret_access_key='Izs949qQ+3moRGNIodCxOwyjk66Ef9lRKpKG4Euw',
+    					aws_session_token='FwoGZXIvYXdzEAQaDOLz64DwytddibVQyyLJAYnqcaJRS6CyuSncdQw7u7E6IK4cDV+4Pdaf0hgXyiZp5dTOAimWEQBSFWuV3v7FzIgIo4Hr9muKDa+ckGOTy9M7tmX+GSoKIDyOFc4Lp0gFQH3OQI+XwnNhbvh83DiLwY2gvKX0rhBmMajl5NOztpfnEG6XgG0eU5zguBC2liOGM1f35xhdm5GbBeukIJkkNI6uUr7Jqao730ziKQS2LL61xx3bpdoNqwutoTNvKvQzx/onxt399DYeSoXm4U2wr/4Yw4Dd8WcRwyjTz8mUBjItYZC6ylNm/CNIpyDqGMkeJK3efJjWt0+1uu94fNsH6q9ruaCRp2jKzUKle44Y')
+		try:
+            		s3_client.upload_file(
+                		'./upload/' + filename,
+                		bucket_name,
+               			student.nombres,
+                		ExtraArgs={'ACL': 'public-read',
+                           		"ContentType": filename})
+		except ClientError as e:
+			 return e
+
+		config = Config(signature_version=botocore.UNSIGNED)
+		fotoUrl = boto3.client('s3', config=config) \
+            				.generate_presigned_url(
+            				'get_object',
+            				ExpiresIn=0,
+            				Params={'Bucket': bucket_name, 'Key': student.nombres})
+		setattr(student, 'fotoPerfilUrl', fotoUrl)
 		db.session.commit()
 
-	return student.serialize(), 201
+	return student.serialize(), 200
 
 
 #GET
