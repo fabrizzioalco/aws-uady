@@ -1,7 +1,6 @@
 from api.alumno.alumno import alumno_bp
 from api.profesor.profesor import profesor_bp
 from flask import Flask
-from flasgger import Swagger
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import os 

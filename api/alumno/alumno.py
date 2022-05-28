@@ -14,10 +14,11 @@ from models import Alumno as AlumnoModel
 
 
 alumno_bp = Blueprint('alumno', __name__)
-@alumno_bp.route('/alumno/<int:id>/fotoPerfil', methods=['POST'])
+@alumno_bp.route('/alumnos/<int:id>/fotoPerfil', methods=['POST'])
 def save_profile_picture(id): 
 	#Find the student to assign the url of the profile picture
-	student = AlumnoModel.query.filter_by(id=alumno['id']).first_or_404()
+	student = AlumnoModel.query.filter_by(id=id).first_or_404()
+	print("This is the student", student)
 
 	if 'foto' in request.files: 
 		foto = request.files['foto']

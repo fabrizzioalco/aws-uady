@@ -73,4 +73,12 @@ def validate_professor_payload(payload):
 		return False
 	if payload["apellidos"] == "":
 		return False
+	if payload["nombres"] is None:
+		return False
+	if payload["apellidos"] is None:
+		return False
+	if payload["numeroEmpleado"] is None:
+		return False
+	if payload["horasClase"] is None:
+		return False
 	return True

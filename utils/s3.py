@@ -19,9 +19,7 @@ def push_to_s3(file_name, object_name=None):
         s3_client.upload_file(
             file_name,
             bucket_name,
-            object_name,
-            ExtraArgs={'ACL': 'public-read',
-                       "ContentType": file_name.content_type}
+            object_name
         )
     except ClientError as e:
         return e
@@ -33,5 +31,5 @@ def push_to_s3(file_name, object_name=None):
             ExpiresIn=0,
             Params={'Bucket': bucket_name, 'Key': object_name}
     )
-
+    print(fotoUrl)
     return fotoUrl
