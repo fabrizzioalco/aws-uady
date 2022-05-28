@@ -12,6 +12,9 @@ profesores=[]
 def create_profesores():
 	profesor_p = request.get_json()
 
+
+	if not validate_professor_payload(profesor_p):
+		return jsonify({"error": "BAD REQUEST"}), 400
 	if ProfesorModel.query.filter_by(numeroEmpleado=profesor_p['numeroEmpleado']).first():
 		return jsonify({"error": "Profesor con ID {id} ya existe"}), 400
 

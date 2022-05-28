@@ -40,7 +40,7 @@ class Profesor(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	nombres=db.Column(db.String(80))
 	apellidos=db.Column(db.String(80))
-	numeroEmpleado=db.Column(db.String(80), unique=True)
+	numeroEmpleado=db.Column(db.Integer, unique=True)
 	horasClase=db.Column(db.Integer)
 
 
