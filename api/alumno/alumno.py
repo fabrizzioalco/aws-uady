@@ -10,8 +10,7 @@ from config import *
 from werkzeug.utils import secure_filename
 from models import Alumno as AlumnoModel
 
-
-
+bucket_name = 'pf-webs-s3'
 
 alumno_bp = Blueprint('alumno', __name__)
 @alumno_bp.route('/alumnos/<int:id>/fotoPerfil', methods=['POST'])
@@ -19,17 +18,16 @@ def save_profile_picture(id):
 	#Find the student to assign the url of the profile picture
 	student = AlumnoModel.query.filter_by(id=id).first_or_404()
 	print("This is the student", student)
-
 	if 'foto' in request.files: 
 		foto = request.files['foto']
 		filename = secure_filename(foto.filename)
-		foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		s3_url = push_to_s3(filename, student.nombres + Date.today().strftime('%Y%m%d'))
-
+		foto.save(os.path.join(app.root_path, './upload', filename))
+		s3_url = push_to_s3(filename, bucket_name , student.nombres)
+ 
 		setattr(student, s3_url)
 		db.session.commit()
 
-	return jsonify(student), 201
+	return student.serialize(), 201
 
 
 #GET
