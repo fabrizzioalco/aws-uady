@@ -5,6 +5,7 @@ import os
 
 
 app = Flask(__name__)
+app.config['BUNDLE_ERRORS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI') or 'sqlite:///sicei-webS.db'
 app.config['UPLOAD_FOLDER'] = './upload'
 
